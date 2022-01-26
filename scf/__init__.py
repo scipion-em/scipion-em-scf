@@ -23,9 +23,12 @@
 # *  e-mail address 'scipion@cnb.csic.es'
 # *
 # **************************************************************************
+import os
 
 import pwem
+from pyworkflow.gui.project.utils import OS
 
+from scf.constants import DEFAULT_VERSION
 
 _logo = ""
 _references = []
@@ -45,7 +48,30 @@ class Plugin(pwem.Plugin):
         """ Run SCF command from a given protocol. """
 
         # Get the command
-        cmd = cls.getHome(program)
+        cmd = os.path.join("scf-%s/CommandLineSCF" % DEFAULT_VERSION, program)
 
         # Run the protocol with that command
         protocol.runJob(cmd, args, env=cls.getEnviron(), cwd=cwd)
+
+    @classmethod
+    def defineBinaries(cls, env):
+        SCF_INSTALLED = 'scf_%s_installed' % DEFAULT_VERSION
+
+        if 'linux' in OS.getPlatform().lower():
+
+            # Clone repo https://github.com/LyumkisLab/CommandLineSCF.git
+            installationCmd = ' git clone git@github.com:LyumkisLab/CommandLineSCF.git \n'
+
+            # Create installation finished flag file
+            installationCmd += 'touch %s' % SCF_INSTALLED
+
+            env.addPackage('scf',
+                           version=DEFAULT_VERSION,
+                           createBuildDir=True,
+                           buildDir=cls._getEMFolder(DEFAULT_VERSION),
+                           commands=[(installationCmd, SCF_INSTALLED)],
+                           default=True)
+
+    @classmethod
+    def _getEMFolder(cls, version=None, *paths):
+        return os.path.join("scf-%s" % version, *paths)

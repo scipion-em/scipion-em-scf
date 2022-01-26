@@ -25,10 +25,11 @@
 # *
 # **************************************************************************
 
-from scf.constants import VERSION_0_0_1
 from pyworkflow.protocol.params import (FloatParam, IntParam)
 from pwem.protocols import ProtAnalysis3D
 from pyworkflow.object import Float
+from scf.constants import VERSION_0_0_1
+from scf import Plugin
 
 
 MONORES_METHOD_URL = 'http://github.com/I2PC/scipion/wiki/XmippProtMonoRes'
@@ -42,11 +43,12 @@ BINARY_MASK = 'binarymask'
 FN_GAUSSIAN_MAP = 'gaussianfilter'
 
 
-class XmippProtMonoRes(ProtAnalysis3D):
+class ScfProtAnalysis(ProtAnalysis3D):
     """
-    Calculate SCF parameter and make plots. \n
+    Calculate SCF parameter and make plots.
     The SCF is how much the SSNR has likely been attenuated due to projections not being distributed uniformly.
     """
+
     _label = 'SCF'
     _lastUpdateVersion = VERSION_0_0_1
 
@@ -77,7 +79,45 @@ class XmippProtMonoRes(ProtAnalysis3D):
 
         form.addParam('TiltAngle',
                       FloatParam,
-                      default=0,
+                      default=0.0,
                       label='Tilt angle',
                       help='Tilting of the sample in silico')
+
+    # -------------------------- INSERT steps functions ---------------------
+    def _insertAllSteps(self):
+        self._insertFunctionStep(self.runScfAnalysis)
+
+    # --------------------------- STEPS functions ----------------------------
+    def runScfAnalysis(self):
+        """Compute the SCF analysis"""
+
+        # paramsScf = {
+        #     'FileName': ,
+        #     '3DFSCMap': ,
+        #     'RootOutputName': self.getExtraPath(),
+        #     'FourierRadius': self.FourierRadius.get(),
+        #     'NumberToUse': self.NumberToUse.get(),
+        #     'TiltAngle': self.TiltAngle.get()
+        # }
+        #
+        # argsScf = "--FileName %(FileName)s " \
+        #     "--3DFSCMap %(3DFSCMap)s " \
+        #     "--RootOutputName %(RootOutputName)s " \
+        #     "--FourierRadius %(FourierRadius)d" \
+        #     "--NumberToUse %(FourierRadius)d " \
+        #     "--TiltAngle %(TiltAngle)f "
+
+
+        # Plugin.runSCF(self, 'SCFJan2022', argsScf % paramsScf)
+
+    # --------------------------- INFO functions ----------------------------
+    def _summary(self):
+        summary = []
+
+        return summary
+
+    def _methods(self):
+        methods = []
+
+        return methods
 
