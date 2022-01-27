@@ -48,7 +48,7 @@ class Plugin(pwem.Plugin):
         """ Run SCF command from a given protocol. """
 
         # Get the command
-        cmd = os.path.join("scf-%s/CommandLineSCF" % DEFAULT_VERSION, program)
+        cmd = os.path.join("python scf-%s/CommandLineSCF" % DEFAULT_VERSION, program)
 
         # Run the protocol with that command
         protocol.runJob(cmd, args, env=cls.getEnviron(), cwd=cwd)
