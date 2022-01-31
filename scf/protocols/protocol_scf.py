@@ -28,6 +28,7 @@ import csv
 import os.path
 
 from pwem.convert.transformations import euler_from_matrix
+from pyworkflow.object import String
 from pyworkflow.protocol.params import FloatParam, IntParam, PointerParam
 from pwem.protocols import ProtAnalysis3D
 from scf import Plugin
@@ -41,10 +42,9 @@ class ScfProtAnalysis(ProtAnalysis3D):
 
     _label = 'SCF Analysis'
 
-    _outputInfoFileSCF = ""
-
     def __init__(self, **args):
         ProtAnalysis3D.__init__(self, **args)
+        self._outputInfoFileSCF = String("")
 
     # --------------------------- DEFINE param functions ----------------------
     def _defineParams(self, form):
@@ -85,7 +85,7 @@ class ScfProtAnalysis(ProtAnalysis3D):
     # --------------------------- STEPS functions ----------------------------
     def generateSideInfo(self):
         """ Generates angle information of the particles to feed the SCF algorithm """
-        self._outputInfoFileSCF = self._getExtraPath("outputInfoFileSCF.txt")
+        self._outputInfoFileSCF = String(self._getExtraPath("outputInfoFileSCF.txt"))
 
         particles = self.inParticles.get()
 
@@ -103,6 +103,8 @@ class ScfProtAnalysis(ProtAnalysis3D):
         with open(outputAnglesFile, 'w') as f:
             csvW = csv.writer(f, delimiter='\t')
             csvW.writerows(angles)
+
+        self._store()
 
     def runScfAnalysis(self):
         """ Compute the SCF analysis """
@@ -137,13 +139,15 @@ class ScfProtAnalysis(ProtAnalysis3D):
     def _summary(self):
         summary = []
 
-        if os.path.exists(self._outputInfoFileSCF):
-            summary.append("SCF analysis summary:")
+        if os.path.exists(self._outputInfoFileSCF.get()):
+            summary.append("SCF analysis output summary:")
 
-            with open(self._outputInfoFileSCF, 'r') as f:
+            with open(self._outputInfoFileSCF.get(), 'r') as f:
                 lines = f.readlines()
+                print(lines)
 
-            summary.append(lines)
+            for line in lines:
+                summary.append(line[:-1])
 
         else:
             summary.append("SCF analysis not finished yet.")
@@ -153,7 +157,7 @@ class ScfProtAnalysis(ProtAnalysis3D):
     def _methods(self):
         methods = []
 
-        if os.path.exists(self._outputInfoFileSCF):
+        if os.path.exists(self._outputInfoFileSCF.get()):
             methods.append('SCF analysis completed using the Baldwin and Lyumkis method. Out information contained in '
                            'summary and plot image under "Analyze results".')
 
