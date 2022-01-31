@@ -26,18 +26,22 @@
 import os
 
 import pwem
+from scipion.constants import PYTHON
 from pyworkflow.gui.project.utils import OS
 
-from scf.constants import DEFAULT_VERSION
+from scf.constants import DEFAULT_VERSION, SCF_HOME
 
 _logo = ""
 _references = []
 
 
 class Plugin(pwem.Plugin):
+    _homeVar = SCF_HOME
+    _validationMsg = None
+
     @classmethod
     def _defineVariables(cls):
-        pass
+        cls._defineEmVar(SCF_HOME, cls._getSCFFolder(DEFAULT_VERSION))
 
     @classmethod
     def getEnviron(cls):
@@ -47,8 +51,12 @@ class Plugin(pwem.Plugin):
     def runSCF(cls, protocol, program, args, cwd=None):
         """ Run SCF command from a given protocol. """
 
+        #  Call python
+        cmd = PYTHON + " "
+
         # Get the command
-        cmd = os.path.join("python scf-%s/CommandLineSCF" % DEFAULT_VERSION, program)
+        cmd += Plugin.getHome("CommandLineSCF")
+        cmd = os.path.join(cmd, program)
 
         # Run the protocol with that command
         protocol.runJob(cmd, args, env=cls.getEnviron(), cwd=cwd)
@@ -73,5 +81,9 @@ class Plugin(pwem.Plugin):
                            default=True)
 
     @classmethod
-    def _getEMFolder(cls, version=None, *paths):
+    def _getEMFolder(cls, version, *paths):
         return os.path.join("scf-%s" % version, *paths)
+
+    @classmethod
+    def _getSCFFolder(cls, version, *paths):
+        return os.path.join(cls._getEMFolder(version), *paths)

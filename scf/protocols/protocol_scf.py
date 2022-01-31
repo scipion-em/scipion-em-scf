@@ -47,8 +47,6 @@ class ScfProtAnalysis(ProtAnalysis3D):
     def _defineParams(self, form):
         form.addSection(label='Input')
 
-        # --FileName, "the name of the File of Angles; Psi Theta Rot in degrees  "
-
         form.addParam('inParticles',
                       PointerParam,
                       pointerClass='SetOfParticles',
@@ -72,6 +70,9 @@ class ScfProtAnalysis(ProtAnalysis3D):
                       default=0.0,
                       label='Tilt angle',
                       help='Tilting of the sample in silico')
+
+        # not implemented yet
+        # --3DFSCMap eventually we will look at correlations of the resolution and the sampling
 
     # -------------------------- INSERT steps functions ---------------------
     def _insertAllSteps(self):
@@ -102,21 +103,21 @@ class ScfProtAnalysis(ProtAnalysis3D):
         """ Compute the SCF analysis """
         paramsScf = {
             'FileName': self._getExtraPath("particleAngles.txt"),
-            # '3DFSCMap': ,
+            # '3DFSCMap': , # Not implemented yet
             'RootOutputName': self._getExtraPath(),
             'FourierRadius': self.FourierRadius.get(),
             'NumberToUse': self.NumberToUse.get(),
             'TiltAngle': self.TiltAngle.get()
         }
 
-        argsScf = "--FileName %(FileName)s " \
-                  "--RootOutputName %(RootOutputName)s " \
+        argsScf = "--RootOutputName %(RootOutputName)s " \
                   "--FourierRadius %(FourierRadius)d " \
                   "--NumberToUse %(FourierRadius)d " \
-                  "--TiltAngle %(TiltAngle)f "
+                  "--TiltAngle %(TiltAngle)d " \
+                  "%(FileName)s "
                   # "--3DFSCMap %(3DFSCMap)s "
 
-        Plugin.runSCF(self, 'SCFJan2022', argsScf % paramsScf)
+        Plugin.runSCF(self, 'SCFJan2022.py', argsScf % paramsScf)
 
     # --------------------------- UTILS functions ----------------------------
     @staticmethod
