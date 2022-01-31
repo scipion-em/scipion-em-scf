@@ -25,6 +25,7 @@
 # *
 # **************************************************************************
 import csv
+import os.path
 
 from pwem.convert.transformations import euler_from_matrix
 from pyworkflow.protocol.params import FloatParam, IntParam, PointerParam
@@ -39,6 +40,8 @@ class ScfProtAnalysis(ProtAnalysis3D):
     """
 
     _label = 'SCF Analysis'
+
+    _outputInfoFileSCF = ""
 
     def __init__(self, **args):
         ProtAnalysis3D.__init__(self, **args)
@@ -71,7 +74,7 @@ class ScfProtAnalysis(ProtAnalysis3D):
                       label='Tilt angle',
                       help='Tilting of the sample in silico')
 
-        # not implemented yet
+        # Not implemented yet
         # --3DFSCMap eventually we will look at correlations of the resolution and the sampling
 
     # -------------------------- INSERT steps functions ---------------------
@@ -82,6 +85,8 @@ class ScfProtAnalysis(ProtAnalysis3D):
     # --------------------------- STEPS functions ----------------------------
     def generateSideInfo(self):
         """ Generates angle information of the particles to feed the SCF algorithm """
+        self._outputInfoFileSCF = self._getExtraPath("outputInfoFileSCF.txt")
+
         particles = self.inParticles.get()
 
         angles = []
@@ -107,15 +112,17 @@ class ScfProtAnalysis(ProtAnalysis3D):
             'RootOutputName': self._getExtraPath(),
             'FourierRadius': self.FourierRadius.get(),
             'NumberToUse': self.NumberToUse.get(),
-            'TiltAngle': self.TiltAngle.get()
+            'TiltAngle': self.TiltAngle.get(),
+            'outputInfoFileSCF': self._outputInfoFileSCF,
         }
 
         argsScf = "--RootOutputName %(RootOutputName)s " \
                   "--FourierRadius %(FourierRadius)d " \
                   "--NumberToUse %(FourierRadius)d " \
                   "--TiltAngle %(TiltAngle)d " \
-                  "%(FileName)s "
-                  # "--3DFSCMap %(3DFSCMap)s "
+                  "%(FileName)s " \
+                  "2>&1 | tee %(outputInfoFileSCF)s "
+                  # "--3DFSCMap %(3DFSCMap)s " # Not implemented yet
 
         Plugin.runSCF(self, 'SCFJan2022.py', argsScf % paramsScf)
 
@@ -130,9 +137,27 @@ class ScfProtAnalysis(ProtAnalysis3D):
     def _summary(self):
         summary = []
 
+        if os.path.exists(self._outputInfoFileSCF):
+            summary.append("SCF analysis summary:")
+
+            with open(self._outputInfoFileSCF, 'r') as f:
+                lines = f.readlines()
+
+            summary.append(lines)
+
+        else:
+            summary.append("SCF analysis not finished yet.")
+
         return summary
 
     def _methods(self):
         methods = []
+
+        if os.path.exists(self._outputInfoFileSCF):
+            methods.append('SCF analysis completed using the Baldwin and Lyumkis method. Out information contained in '
+                           'summary and plot image under "Analyze results".')
+
+        else:
+            methods.append("SCF analysis not finished yet.")
 
         return methods
