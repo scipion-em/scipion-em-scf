@@ -1,7 +1,7 @@
 # coding: latin-1
 # **************************************************************************
 # *
-# * Authors:     J.M. De la Rosa Trevin (delarosatrevin@scilifelab.se) [1]
+# * Authors:     Federico P. de Isidro Gomez (fp.deisidro@cnb.csi.es) [1]
 # *
 # * [1] SciLifeLab, Stockholm University
 # *
@@ -26,23 +26,23 @@
 # **************************************************************************
 """
 @article{baldwin2020non,
-  title={Non-uniformity of projection distributions attenuates resolution in Cryo-EM},
-  author={Baldwin, Philip R and Lyumkis, Dmitry},
-  journal={Progress in biophysics and molecular biology},
-  volume={150},
-  pages={160--183},
-  year={2020},
-  publisher={Elsevier}
+  title="Non-uniformity of projection distributions attenuates resolution in Cryo-EM",
+  author="Baldwin, Philip R and Lyumkis, Dmitry",
+  journal="Progress in biophysics and molecular biology",
+  volume="150",
+  pages="160--183",
+  year="2020",
+  publisher="Elsevier"
 }
 
 @article{baldwin2021tools,
-  title={Tools for visualizing and analyzing Fourier space sampling in Cryo-EM},
-  author={Baldwin, Philip R and Lyumkis, Dmitry},
-  journal={Progress in Biophysics and Molecular Biology},
-  volume={160},
-  pages={53--65},
-  year={2021},
-  publisher={Elsevier}
+  title="Tools for visualizing and analyzing Fourier space sampling in Cryo-EM",
+  author="Baldwin, Philip R and Lyumkis, Dmitry",
+  journal="Progress in Biophysics and Molecular Biology",
+  volume="160",
+  pages="53--65",
+  year="2021",
+  publisher="Elsevier"
 }
 
 """

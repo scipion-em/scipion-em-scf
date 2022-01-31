@@ -87,3 +87,7 @@ class Plugin(pwem.Plugin):
     @classmethod
     def _getSCFFolder(cls, version, *paths):
         return os.path.join(cls._getEMFolder(version), *paths)
+
+    @classmethod
+    def _citations(cls):
+        return ['baldwin2021tools', 'baldwin2020non']
