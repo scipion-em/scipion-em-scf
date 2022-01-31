@@ -144,7 +144,6 @@ class ScfProtAnalysis(ProtAnalysis3D):
 
             with open(self._outputInfoFileSCF.get(), 'r') as f:
                 lines = f.readlines()
-                print(lines)
 
             for line in lines:
                 summary.append(line[:-1])
