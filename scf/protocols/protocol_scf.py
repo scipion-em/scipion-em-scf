@@ -66,7 +66,9 @@ class ScfProtAnalysis(ProtAnalysis3D):
                       IntParam,
                       default=1000,
                       label='Number of projections',
-                      help='The number of projections to use, if you do not want to use all of them')
+                      help='The number of projections to use, if you do not want to use all of them. The default value '
+                           'is the minimum of 10000 or the total number in the file. One can try to increase this '
+                           'number. To select all the particles set to -1')
 
         form.addParam('TiltAngle',
                       FloatParam,
@@ -120,7 +122,7 @@ class ScfProtAnalysis(ProtAnalysis3D):
 
         argsScf = "--RootOutputName %(RootOutputName)s " \
                   "--FourierRadius %(FourierRadius)d " \
-                  "--NumberToUse %(FourierRadius)d " \
+                  "--NumberToUse %(NumberToUse)d " \
                   "--TiltAngle %(TiltAngle)d " \
                   "%(FileName)s " \
                   "2>&1 | tee %(outputInfoFileSCF)s "
