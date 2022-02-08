@@ -54,14 +54,14 @@ class ScfProtAnalysis(ProtAnalysis3D):
                       PointerParam,
                       pointerClass='SetOfParticles',
                       label='Input particles',
-                      help='Input set of particles containing angle information')
+                      help='Input set of particles containing angle information.')
 
         form.addParam('FourierRadius',
                       IntParam,
                       default=50,
                       label='Fourier radius',
                       help='Fourier radius (int) of the shell on which sampling is evaluated. One can change the '
-                           'integer value at which the Sampling is plotted, and the SCF evaluatte')
+                           'integer value at which the Sampling is plotted, and the SCF evaluatte.')
 
         form.addParam('NumberToUse',
                       IntParam,
@@ -69,13 +69,13 @@ class ScfProtAnalysis(ProtAnalysis3D):
                       label='Number of projections',
                       help='The number of projections to use, if you do not want to use all of them. The default value '
                            'is the minimum of 10000 or the total number in the file. One can try to increase this '
-                           'number. To select all the particles set to -1')
+                           'number. To select all the particles set to -1.')
 
         form.addParam('TiltAngle',
                       FloatParam,
                       default=0.0,
                       label='Tilt angle',
-                      help='Tilting of the sample in silico')
+                      help='Tilting of the sample in silico.')
 
         # Not implemented yet
         # --3DFSCMap eventually we will look at correlations of the resolution and the sampling
@@ -116,18 +116,24 @@ class ScfProtAnalysis(ProtAnalysis3D):
             # '3DFSCMap': , # Not implemented yet
             'RootOutputName': self._getExtraPath(),
             'FourierRadius': self.FourierRadius.get(),
-            'NumberToUse': self.NumberToUse.get(),
             'TiltAngle': self.TiltAngle.get(),
             'outputInfoFileSCF': self._outputInfoFileSCF,
         }
 
         argsScf = "--RootOutputName %(RootOutputName)s " \
                   "--FourierRadius %(FourierRadius)d " \
-                  "--NumberToUse %(NumberToUse)d " \
                   "--TiltAngle %(TiltAngle)d " \
-                  "%(FileName)s " \
-                  "2>&1 | tee %(outputInfoFileSCF)s "
-                  # "--3DFSCMap %(3DFSCMap)s " # Not implemented yet
+
+        if self.NumberToUse.get() != -1:
+            paramsScf.update({
+                'NumberToUse': self.NumberToUse.get(),
+            })
+
+            argsScf += "--NumberToUse %(NumberToUse)d "
+
+        argsScf += "%(FileName)s " \
+                   "2>&1 | tee %(outputInfoFileSCF)s "
+                   # "--3DFSCMap %(3DFSCMap)s " # Not implemented yet
 
         Plugin.runSCF(self, 'SCFJan2022.py', argsScf % paramsScf)
 
