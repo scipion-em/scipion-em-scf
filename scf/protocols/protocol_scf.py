@@ -87,7 +87,9 @@ class ScfProtAnalysis(ProtAnalysis3D):
 
     # --------------------------- STEPS functions ----------------------------
     def generateSideInfo(self):
-        """ Generates angle information of the particles to feed the SCF algorithm """
+        """ Generates side information and input files to feed the SCF algorithm """
+
+        # Generates the angle information file of the particles to feed the SCF algorithm
         self._outputInfoFileSCF = String(self._getExtraPath("outputInfoFileSCF.txt"))
 
         particles = self.inParticles.get()
@@ -106,6 +108,11 @@ class ScfProtAnalysis(ProtAnalysis3D):
         with open(outputAnglesFile, 'w') as f:
             csvW = csv.writer(f, delimiter='\t')
             csvW.writerows(angles)
+
+        # Converts the input resolution to fourier radius
+        self.fourierRadius = self.resolutionAnalysis.get() * self.inParticles.get().getSamplingRate() / \
+                             self.inParticles.get().getFirstItem().getXDim()
+
 
         self._store()
 
