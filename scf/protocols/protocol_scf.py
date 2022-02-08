@@ -60,7 +60,8 @@ class ScfProtAnalysis(ProtAnalysis3D):
                       IntParam,
                       default=50,
                       label='Fourier radius',
-                      help='Fourier radius (int) of the shell on which sampling is evaluated')
+                      help='Fourier radius (int) of the shell on which sampling is evaluated. One can change the '
+                           'integer value at which the Sampling is plotted, and the SCF evaluatte')
 
         form.addParam('NumberToUse',
                       IntParam,
