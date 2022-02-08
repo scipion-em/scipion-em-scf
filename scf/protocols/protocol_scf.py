@@ -56,14 +56,15 @@ class ScfProtAnalysis(ProtAnalysis3D):
                       label='Input particles',
                       help='Input set of particles containing angle information.')
 
-        form.addParam('FourierRadius',
+        form.addParam('resolutionAnalysis',
                       IntParam,
                       default=50,
                       label='Fourier radius',
-                      help='Fourier radius (int) of the shell on which sampling is evaluated. One can change the '
-                           'integer value at which the Sampling is plotted, and the SCF evaluatte.')
+                      help='Resolution corresponfing to the Fourier radius (int) of the shell on which sampling is '
+                           'evaluated. One can change the integer value at which the Sampling is plotted, and the SCF '
+                           'evaluatte.')
 
-        form.addParam('NumberToUse',
+        form.addParam('numberToUse',
                       IntParam,
                       default=1000,
                       label='Number of projections',
@@ -71,7 +72,7 @@ class ScfProtAnalysis(ProtAnalysis3D):
                            'is the minimum of 10000 or the total number in the file. One can try to increase this '
                            'number. To select all the particles set to -1.')
 
-        form.addParam('TiltAngle',
+        form.addParam('tiltAngle',
                       FloatParam,
                       default=0.0,
                       label='Tilt angle',
@@ -122,8 +123,8 @@ class ScfProtAnalysis(ProtAnalysis3D):
             'FileName': self._getExtraPath("particleAngles.txt"),
             # '3DFSCMap': , # Not implemented yet
             'RootOutputName': self._getExtraPath(),
-            'FourierRadius': self.FourierRadius.get(),
-            'TiltAngle': self.TiltAngle.get(),
+            'FourierRadius': self.fourierRadius,
+            'TiltAngle': self.tiltAngle.get(),
             'outputInfoFileSCF': self._outputInfoFileSCF,
         }
 
@@ -131,9 +132,9 @@ class ScfProtAnalysis(ProtAnalysis3D):
                   "--FourierRadius %(FourierRadius)d " \
                   "--TiltAngle %(TiltAngle)d " \
 
-        if self.NumberToUse.get() != -1:
+        if self.numberToUse.get() != -1:
             paramsScf.update({
-                'NumberToUse': self.NumberToUse.get(),
+                'NumberToUse': self.numberToUse.get(),
             })
 
             argsScf += "--NumberToUse %(NumberToUse)d "
