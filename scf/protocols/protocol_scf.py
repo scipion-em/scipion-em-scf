@@ -57,10 +57,10 @@ class ScfProtAnalysis(ProtAnalysis3D):
                       help='Input set of particles containing angle information.')
 
         form.addParam('resolutionAnalysis',
-                      IntParam,
-                      default=50,
-                      label='Fourier radius',
-                      help='Resolution corresponfing to the Fourier radius (int) of the shell on which sampling is '
+                      FloatParam,
+                      default=0.4,
+                      label='Resolution analysis',
+                      help='Resolution corresponding to the Fourier radius (int) of the shell on which sampling is '
                            'evaluated. One can change the integer value at which the Sampling is plotted, and the SCF '
                            'evaluatte.')
 
@@ -111,9 +111,7 @@ class ScfProtAnalysis(ProtAnalysis3D):
             csvW.writerows(angles)
 
         # Converts the input resolution to fourier radius
-        self.fourierRadius = self.resolutionAnalysis.get() * self.inParticles.get().getSamplingRate() / \
-                             self.inParticles.get().getFirstItem().getXDim()
-
+        self.fourierRadius = (self.inParticles.get().getSamplingRate() / self.resolutionAnalysis.get()) * 2 * self.inParticles.get().getFirstItem().getXDim()
 
         self._store()
 
