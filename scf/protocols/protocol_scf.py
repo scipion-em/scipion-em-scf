@@ -60,9 +60,7 @@ class ScfProtAnalysis(ProtAnalysis3D):
                       FloatParam,
                       default=5,
                       label='Resolution analysis',
-                      help='Resolution corresponding to the Fourier radius (int) of the shell on which sampling is '
-                           'evaluated. One can change the integer value at which the Sampling is plotted, and the SCF '
-                           'evaluatte.')
+                      help='Resolution at which the SCF analysis will be performed.')
 
         form.addParam('numberToUse',
                       IntParam,
