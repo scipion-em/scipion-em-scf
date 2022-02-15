@@ -24,12 +24,14 @@
 # *  e-mail address 'scipion@cnb.csic.es'
 # *
 # **************************************************************************
+
+
 import csv
 import os.path
 
 from pwem.convert.transformations import euler_from_matrix
 from pyworkflow.object import String
-from pyworkflow.protocol.params import FloatParam, IntParam, PointerParam
+from pyworkflow.protocol.params import FloatParam, IntParam, PointerParam, StringParam
 from pwem.protocols import ProtAnalysis3D
 from scf import Plugin
 
@@ -61,6 +63,12 @@ class ScfProtAnalysis(ProtAnalysis3D):
                       default=5,
                       label='Resolution analysis',
                       help='Resolution at which the SCF analysis will be performed.')
+
+        form.addParam('sym',
+                      StringParam,
+                      default='',
+                      label='Symmetry',
+                      help='Options Icos, Oct, Tet, Cn, or Dn. If tilt specified, then Sym =C1.')
 
         form.addParam('numberToUse',
                       IntParam,
@@ -134,6 +142,13 @@ class ScfProtAnalysis(ProtAnalysis3D):
             })
 
             argsScf += "--NumberToUse %(NumberToUse)d "
+
+        if self.sym.get() != '':
+            paramsScf.update({
+                'Sym': self.sym.get()
+            })
+
+            argsScf += "--Sym %(Sym)s "
 
         argsScf += "%(FileName)s " \
                    "2>&1 | tee %(outputInfoFileSCF)s "
