@@ -159,7 +159,7 @@ class ScfProtAnalysis(ProtAnalysis3D):
     # --------------------------- UTILS functions ----------------------------
     @staticmethod
     def getAnglesFromMatrix(matrix):
-        angles = euler_from_matrix(matrix)
+        angles = euler_from_matrix(matrix, axes='szyz')
 
         return angles[0], angles[1], angles[2]
 
