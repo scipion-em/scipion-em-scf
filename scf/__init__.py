@@ -68,7 +68,8 @@ class Plugin(pwem.Plugin):
         if 'linux' in OS.getPlatform().lower():
 
             # Clone repo https://github.com/LyumkisLab/CommandLineSCF.git
-            installationCmd = ' git clone git@github.com:LyumkisLab/CommandLineSCF.git \n'
+            # installationCmd = ' git clone git@github.com:LyumkisLab/CommandLineSCF.git \n'
+            installationCmd = ' git clone https://github.com/LyumkisLab/CommandLineSCF.git \n'
 
             # Create installation finished flag file
             installationCmd += 'touch %s' % SCF_INSTALLED
