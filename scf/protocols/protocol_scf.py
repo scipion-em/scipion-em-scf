@@ -27,6 +27,7 @@
 
 
 import csv
+from math import degrees
 import os.path
 
 from pwem.convert.transformations import euler_from_matrix
@@ -161,7 +162,7 @@ class ScfProtAnalysis(ProtAnalysis3D):
     def getAnglesFromMatrix(matrix):
         angles = euler_from_matrix(matrix, axes='szyz')
 
-        return angles[0], angles[1], angles[2]
+        return degrees(angles[0]), degrees(angles[1]), degrees(angles[2])
 
     # --------------------------- INFO functions ----------------------------
     def _summary(self):
