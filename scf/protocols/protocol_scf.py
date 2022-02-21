@@ -107,7 +107,7 @@ class ScfProtAnalysis(ProtAnalysis3D):
         for p in particles:
             matrix = p.getTransform().getMatrix()
 
-            rot, theta, psi = self.getAnglesFromMatrix(matrix)
+            psi, theta, rot = self.getAnglesFromMatrix(matrix)
 
             angles.append([psi, theta, rot])
 
